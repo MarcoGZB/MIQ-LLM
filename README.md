@@ -14,4 +14,76 @@ Effective prognostic and health management (PHM) methods including fault and rem
 ### The optimization flowchart of MIQ-LLM for joint post-training and generalizable fine-tuning stage
 <img width="3378" height="2772" alt="Fig7" src="https://github.com/user-attachments/assets/7261a4ef-28c9-47c5-9e48-1455306cdb04" />
 
+## Code Version: 2026.07.21
+After downloading models and datasets, organize your files as follows:
+<pre>
+MIQ-LLM/
+├── datasets/
+|   ├── public/                       # Download and place public datasets 
+│   └── private/                      # Smaples of the utilized private datasets
+├── LLMs/                             # Base LLM-Instruct models
+|   ├── DeepSeek-R1-Distill-Qwen-1.5B/
+|   ├── DeepSeek-R1-Distill-Qwen-7B/
+|   ├── Qwen2.5-1.5B-Instruct/
+|   └── Qwen2.5-7B-Instruct/
+├── DAmodels/                         # Domain-adaption models for compare                    
+|   ├── data_loader_1d.py/
+|   ├── resnet18_1d.py/
+|   ├── utils.py/
+|   ├── DANN.py/
+|   ├── DCORAL.py/
+│   └── ERM.py/                      
+├── DGmodels/                         # Domain-adaption models for compare                    
+|   ├── data_loader_1d.py/
+|   ├── resnet18_1d.py/
+|   ├── utils.py/
+|   ├── DGNIS.py/
+│   └── IEDGNet.py/     
+├── models/                          # Utilized codes for MIQ-LLM construction
+|   ├── data_processor.py/
+|   ├── FaCB_Loss.py/
+|   ├── inference.py/
+|   ├── llm_matcher.py/
+|   ├── MSP_Former.py/
+│   ├── .../   
+|   └── utils/
+│         └── .../   
+└── yaml/
+    └── infer.yaml                   # Inference configuration
+</pre>
+### Run Inference
+
+We now support **parallel inference** using `accelerate`. This automatically aggregates results from multiple GPUs.
+
+```bash
+# Using the automated script (Recommended)
+bash scripts/inference.sh
+
+# Or launch manually via accelerate
+accelerate launch --config_file accelerate_config.yaml inference.py --config yaml/infer.yaml
+```
+## Training (related files will be uploaded once the paper is accepted)
+
+We provide a training pipeline using `accelerate`. Ensure your `accelerate_config.yaml` is properly configured for your hardware.
+
+### A. Post-training
+
+Stage A focuses on Post-training stage of the `MSP-Former`.
+
+```bash
+# One-click Post-training
+bash scripts/run_posttrain.sh
+```
+
+### B. Fine-Tuning 
+
+Stage B performs end-to-end Fine-Tuning, Supervised Fine-Tuning for Small Samples and Unsupervised Fine-Tuning for Cross-working conditions.
+
+```bash
+# One-click SFT (Requires post-trained MSP-Former weights)
+bash scripts/run_sft.sh
+# One-click SFT (Requires post-trained MSP-Former weights)
+bash scripts/run_uft.sh
+```
+
 
