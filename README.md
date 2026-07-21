@@ -51,7 +51,7 @@ MIQ-LLM/
 └── yaml/
     └── infer.yaml                   # Inference configuration
 </pre>
-### Run Inference
+### Run Inference (related model weights and inference file will be uploaded once the paper is accepted)
 
 We now support **parallel inference** using `accelerate`. This automatically aggregates results from multiple GPUs.
 
